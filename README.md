@@ -16,6 +16,23 @@
 
 ---
 
+## Screenshots
+
+<div align="center">
+
+### Upload Screen
+![Upload Screen](assets/upload-screen.png)
+
+### ATS Score & Keyword Analysis
+![Results Score](assets/results-score.png)
+
+### Before & After Rewrites + Quick Wins
+![Results Rewrites](assets/results-rewrites.png)
+
+</div>
+
+---
+
 ## What is ResumeIQ?
 
 ResumeIQ is a full-stack web application that analyzes your resume against any job description and gives you a detailed, AI-powered report — just like a real recruiter would. It tells you your ATS compatibility score, which keywords you're missing, what to rewrite, and what quick changes will make the biggest difference.
