@@ -10,7 +10,7 @@
 [![License](https://img.shields.io/badge/License-MIT-amber?style=flat-square)](LICENSE)
 [![Render](https://img.shields.io/badge/Hosted_on-Render-46E3B7?style=flat-square&logo=render&logoColor=white)](https://render.com)
 
-[Live Demo](#) · [Report a Bug](https://github.com/cryptic91/ResumeIQ_AI-Analyzer/issues) · [Request a Feature](https://github.com/cryptic91/ResumeIQ_AI-Analyzer/issues)
+[Live Demo](https://resumeiq-ai-analyzer.onrender.com) · [Report a Bug](https://github.com/cryptic91/ResumeIQ_AI-Analyzer/issues) · [Request a Feature](https://github.com/cryptic91/ResumeIQ_AI-Analyzer/issues)
 
 </div>
 
