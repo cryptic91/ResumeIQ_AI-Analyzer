@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.venv/Scripts/pip install:*)",
+      "Bash(.venv/Scripts/python -c \"from google import genai; print\\(''google-genai OK''\\)\")",
+      "Bash(.venv/Scripts/python -c \"import analyzer; print\\(''analyzer.py OK''\\)\")",
+      "Bash(pkill -f \"uvicorn main:app\")",
+      "Bash(.venv/Scripts/python -c \":*)"
+    ]
+  }
+}

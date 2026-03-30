@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ResumeIQ — AI Resume Analyzer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════
+       SCREEN 1 — UPLOAD
+  ════════════════════════════════════════════════ -->
+  <div id="screen-upload" class="screen active">
+
+    <header class="site-header">
+      <div class="logo">
+        <span class="logo-mark">R</span>
+        <span class="logo-text">esumeIQ</span>
+      </div>
+      <p class="tagline">AI-powered resume analysis in seconds</p>
+    </header>
+
+    <main class="upload-main">
+      <div class="hero-text">
+        <h1>Know exactly where<br /><em>your resume stands.</em></h1>
+        <p class="hero-sub">Upload your resume, paste a job description, and get a full ATS analysis with actionable improvements — powered by Google Gemini.</p>
+      </div>
+
+      <form id="analyze-form" class="upload-form" novalidate>
+
+        <!-- PDF Drop Zone -->
+        <div class="form-section">
+          <label class="section-label">
+            <span class="label-number">01</span>
+            Your Resume
+          </label>
+          <div id="drop-zone" class="drop-zone" role="button" tabindex="0" aria-label="Upload your PDF resume">
+            <input type="file" id="resume-input" name="resume" accept=".pdf" hidden />
+            <div class="drop-icon">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M24 4L24 32M24 4L16 12M24 4L32 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M8 36V40C8 41.1 8.9 42 10 42H38C39.1 42 40 41.1 40 40V36" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <p class="drop-title">Drop your PDF here</p>
+            <p class="drop-sub">or <span class="drop-link">click to browse</span></p>
+            <div id="file-chosen" class="file-chosen hidden">
+              <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              <span id="file-name-display"></span>
+            </div>
+          </div>
+          <p id="upload-error" class="field-error hidden">Please upload a PDF file.</p>
+        </div>
+
+        <!-- Job Description -->
+        <div class="form-section">
+          <label class="section-label" for="job-description">
+            <span class="label-number">02</span>
+            Job Description
+          </label>
+          <textarea
+            id="job-description"
+            name="job_description"
+            class="jd-textarea"
+            placeholder="Paste the full job description here — requirements, responsibilities, and qualifications…"
+            rows="10"
+            aria-label="Job description"
+          ></textarea>
+          <p id="jd-error" class="field-error hidden">Please paste a job description.</p>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" id="analyze-btn" class="analyze-btn">
+          <span class="btn-text">Analyze My Resume</span>
+          <span class="btn-icon">→</span>
+        </button>
+
+      </form>
+    </main>
+
+    <footer class="site-footer">
+      Built by <strong>Rakib</strong> (<a href="https://github.com/cryptic91" target="_blank" rel="noopener">@cryptic91</a>) · Powered by Google Gemini 2.5 Flash
+    </footer>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       SCREEN 2 — RESULTS
+  ════════════════════════════════════════════════ -->
+  <div id="screen-results" class="screen" aria-hidden="true">
+
+    <div class="results-header">
+      <button id="back-btn" class="back-btn" aria-label="Start over">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"/></svg>
+        New Analysis
+      </button>
+      <div class="logo small">
+        <span class="logo-mark">R</span>
+        <span class="logo-text">esumeIQ</span>
+      </div>
+    </div>
+
+    <!-- Loading overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+      <div class="loading-spinner">
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring ring2"></div>
+      </div>
+      <p class="loading-text">Analyzing your resume…</p>
+      <p class="loading-sub">Gemini is reading every line</p>
+    </div>
+
+    <div id="results-content" class="results-content hidden">
+
+      <!-- Hero: Score + Verdict -->
+      <section class="hero-section">
+        <div class="score-block">
+          <div class="score-ring-wrap">
+            <svg class="score-ring" viewBox="0 0 140 140" aria-hidden="true">
+              <circle class="ring-track" cx="70" cy="70" r="56" />
+              <circle class="ring-progress" cx="70" cy="70" r="56" id="score-ring-progress" />
+            </svg>
+            <div class="score-center">
+              <span id="score-number" class="score-number">0</span>
+              <span class="score-label">ATS Score</span>
+            </div>
+          </div>
+          <div id="score-badge" class="score-badge"></div>
+        </div>
+        <div class="verdict-block">
+          <h2 class="verdict-title">Overall Verdict</h2>
+          <p id="overall-verdict" class="verdict-text"></p>
+
+          <div class="sections-found">
+            <h3 class="mini-heading">Sections Detected</h3>
+            <div id="sections-list" class="tag-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Keywords -->
+      <section class="card-section" id="section-keywords">
+        <h2 class="card-title">
+          <span class="card-icon">🔑</span>
+          Keyword Analysis
+        </h2>
+        <div class="keywords-grid">
+          <div class="keywords-col">
+            <h3 class="kw-heading matched">
+              <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+              Matched Keywords
+            </h3>
+            <div id="matched-keywords" class="keyword-tags"></div>
+          </div>
+          <div class="keywords-col">
+            <h3 class="kw-heading missing">
+              <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+              Missing Keywords
+            </h3>
+            <div id="missing-keywords" class="keyword-tags"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Strengths & Weaknesses -->
+      <section class="sw-section">
+        <div class="card-section half">
+          <h2 class="card-title">
+            <span class="card-icon">💪</span>
+            Strengths
+          </h2>
+          <ul id="strengths-list" class="bullet-list strength"></ul>
+        </div>
+        <div class="card-section half">
+          <h2 class="card-title">
+            <span class="card-icon">⚠️</span>
+            Weaknesses
+          </h2>
+          <ul id="weaknesses-list" class="bullet-list weakness"></ul>
+        </div>
+      </section>
+
+      <!-- Improvements by Section -->
+      <section class="card-section" id="section-improvements">
+        <h2 class="card-title">
+          <span class="card-icon">🔧</span>
+          Improvements by Section
+        </h2>
+        <div id="improvements-content" class="improvements-grid"></div>
+      </section>
+
+      <!-- Before / After -->
+      <section class="card-section" id="section-rewrites">
+        <h2 class="card-title">
+          <span class="card-icon">✍️</span>
+          Before &amp; After Rewrites
+        </h2>
+        <div id="rewrites-content" class="rewrites-list"></div>
+      </section>
+
+      <!-- Quick Wins -->
+      <section class="card-section" id="section-quickwins">
+        <h2 class="card-title">
+          <span class="card-icon">⚡</span>
+          Quick Wins
+        </h2>
+        <ol id="quick-wins-list" class="quick-wins-list"></ol>
+      </section>
+
+    </div><!-- /results-content -->
+
+  </div><!-- /screen-results -->
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
